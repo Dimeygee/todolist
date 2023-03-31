@@ -1,23 +1,35 @@
-import logo from './logo.svg';
 import './App.css';
+import { TextInput } from './components/input';
+import { Todo } from './components/todo';
+import { CheckedDeleteButton } from './components/button';
+import { Status } from './components/status';
+import { useSelector } from 'react-redux';
+import React from 'react';
+
 
 function App() {
+
+  const todos = useSelector(state => state.todos.todos)
+  const completedTasks = useSelector(state => state.todos.completed)
+
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className='container'>
+        <h1>TodoList</h1>
+        <TextInput />
+        { todos.map(todo => {
+          return (
+            <React.Fragment key={todo.id}>
+              <Todo  todo={todo} />
+            </React.Fragment>
+          )
+        }) }
+        <div className='tasks__checked_container'>
+          <Status />
+          { completedTasks.length && <CheckedDeleteButton />  }
+        </div>
+      </div>
     </div>
   );
 }
