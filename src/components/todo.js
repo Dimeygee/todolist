@@ -1,5 +1,5 @@
 
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { toggletodo, removeTodo, editTodo } from "../redux/todo/todoslice"
 import { FaTimes } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
@@ -12,6 +12,8 @@ export const Todo = ({ todo }) => {
 
     const dispatch = useDispatch()
 
+    const { id } = todo
+
     const [ edit, isEdit ] = useState(false)
     const [ value, setValue ] = useState("")
 
@@ -19,12 +21,18 @@ export const Todo = ({ todo }) => {
 
     const handleDelete = () => dispatch(removeTodo(todo.id))
 
+    const todos = useSelector(state => state.todos.todos.find(todo => todo.id === id))
+
     const handleClick = () => {
         dispatch(editTodo({id:todo.id, text:value }))
         isEdit(!edit)
     }
 
 
+    const handleEdit = () => {
+        isEdit(!edit)
+        setValue(todos.text)
+    }
 
 
     return(
@@ -44,7 +52,7 @@ export const Todo = ({ todo }) => {
                     <span className={`todo_text ${todo.checked && "checked"}`}>
                         {todo.text}
                     </span>
-                    <span className="edit_icon" onClick={() => isEdit(!edit)}><MdEdit color="#6dc9f791" size={20} /></span>
+                    <span className="edit_icon" onClick={handleEdit}><MdEdit color="#6dc9f791" size={20} /></span>
                     <span className="delete_icon" onClick={handleDelete}><FaTimes color="#6dc9f791" size={20} /></span>
                 </>
             ) }
